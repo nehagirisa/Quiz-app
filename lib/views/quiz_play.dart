@@ -1,8 +1,5 @@
 
 
-
-
-
 import 'package:quiz/model/question_model.dart';
 import 'package:quiz/services/database.dart';
 import 'package:quiz/views/results.dart';
@@ -21,8 +18,6 @@ int _incorrect = 0;
 int _notAttempted = 0;
 int total = 0;
 
-// /// Stream
-//Stream? infoStream;
 
 class _QuizPlayState extends State<QuizPlay> {
    QuerySnapshot questionSnaphot;
@@ -41,16 +36,10 @@ class _QuizPlayState extends State<QuizPlay> {
       isLoading = false;
       total = questionSnaphot.documents.length;
       setState(() {});
-      // print("init don $total ${widget.quizId} ");
+      
     });
 
-    // if (infoStream == null) {
-    //   infoStream = Stream<List<int>>.periodic(Duration(milliseconds: 100), (x) {
-    //     //  print("this is x $x");
-    //     return [_correct, _incorrect];
-    //   });
-    // }
-
+  
     super.initState();
   }
 
@@ -60,7 +49,6 @@ class _QuizPlayState extends State<QuizPlay> {
 
     questionModel.question = questionSnapshot.data["question"];
 
-    /// shuffling the options
     List<String> options = [
       questionSnapshot.data["option1"],
       questionSnapshot.data["option2"],
@@ -72,18 +60,19 @@ class _QuizPlayState extends State<QuizPlay> {
     questionModel.option1 = options[0];
     questionModel.option2 = options[1];
     questionModel.option3 = options[2];
+    questionModel.option4 = options[3];
    
     questionModel.correctOption = questionSnapshot.data["option1"];
     questionModel.answered = false;
 
-    // print(questionModel.correctOption.toLowerCase());
+ 
 
     return questionModel;
   }
 
   @override
   void dispose() {
-    // infoStream = null;
+  
     super.dispose();
   }
 
@@ -97,18 +86,14 @@ class _QuizPlayState extends State<QuizPlay> {
         backgroundColor: Colors.transparent,
       ),
           body: isLoading
-          ? Container(
-              child: Center(child: CircularProgressIndicator()),
-            )
+          ? SingleChildScrollView(
+            child: Container(
+                child: Center(child: CircularProgressIndicator()),
+              ),
+          )
           : Column(
               children: [
-                // InfoHeader(
-                //   length: questionSnaphot.documents.length,
-                // ),
-                Align(
-                    alignment:Alignment.topRight
-                    ,child: Icon(Icons.volume_up_outlined)).p12(),
-                30.heightBox,
+               
                 questionSnaphot.documents == null
                     ? Container(
                         child: Center(
@@ -127,8 +112,7 @@ class _QuizPlayState extends State<QuizPlay> {
                             controller: pageController,
                             itemCount: questionSnaphot.documents.length,
 
-                            //  shrinkWrap: true,
-                            // physics: ClampingScrollPhysics(),
+                           
                             itemBuilder: (context, index) {
                               return VxBox(
                                 child: Column(
@@ -147,55 +131,10 @@ class _QuizPlayState extends State<QuizPlay> {
                                   .make();
                             }),
                       ).centered(),
-                //10.heightBox,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  // crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // VxBox(
-                    //   child: TextButton(
-                    //       onPressed: () {
-                    //         pageController.animateToPage(--pageChanged,
-                    //             duration: Duration(milliseconds: 250),
-                    //             curve: Curves.bounceInOut);
-                    //       },
-                    //       child: "PREV".text.black.bold.make()),
-                    // )
-                    //     .height(40)
-                    //     .width(80)
-                    //     .color(Colors.lightBlueAccent.shade100)
-                    //     .roundedLg
-                    //     .make(),
-                    // 8.widthBox,
-                    VxBox(
-                      child: TextButton(
-                          onPressed: () {
-                            pageController.animateToPage(++pageChanged,
-                                duration: Duration(milliseconds: 250),
-                                curve: Curves.easeInOutQuad);
-                          },
-                          child: "NEXT".text.black.bold.make()),
-                    )
-                        .height(40)
-                        .width(80)
-                        .color(Colors.lightBlueAccent.shade100)
-                        .roundedLg
-                        .make(),
-                  ],
-                ).px12(),
+               
+              
 
-                // ListView.builder(
-                //         itemCount: questionSnaphot.documents.length,
-                //         shrinkWrap: true,,
-                //         physics: ClampingScrollPhysics(),
-                //         itemBuilder: (context, index) {
-                //           return QuizPlayTile(
-                //             questionModel: getQuestionModelFromDatasnapshot(
-                //                 questionSnaphot.documents[index]),
-                //             index: index,
-                //           );
-                //         }
-                //         )
+               
               ],
             ).scrollVertical(),
       floatingActionButton: FloatingActionButton.extended(
@@ -218,52 +157,7 @@ class _QuizPlayState extends State<QuizPlay> {
   }
 }
 
-// class InfoHeader extends StatefulWidget {
-//   final int length;
-//
-//   InfoHeader({required this.length});
-//
-//   @override
-//   _InfoHeaderState createState() => _InfoHeaderState();
-// }
-//
-// class _InfoHeaderState extends State<InfoHeader> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder(
-//         stream: infoStream,
-//         builder: (context, snapshot) {
-//           return snapshot.hasData
-//               ? Container(
-//                   height: 40,
-//                   margin: EdgeInsets.only(left: 14),
-//                   child: ListView(
-//                     scrollDirection: Axis.horizontal,
-//                     shrinkWrap: true,
-//                     children: <Widget>[
-//                       NoOfQuestionTile(
-//                         text: "Total",
-//                         number: widget.length,
-//                       ),
-//                       NoOfQuestionTile(
-//                         text: "Correct",
-//                         number: _correct,
-//                       ),
-//                       NoOfQuestionTile(
-//                         text: "Incorrect",
-//                         number: _incorrect,
-//                       ),
-//                       NoOfQuestionTile(
-//                         text: "NotAttempted",
-//                         number: _notAttempted,
-//                       ),
-//                     ],
-//                   ),
-//                 )
-//               : CircularProgressIndicator();
-//         });
-//   }
-// }
+
 
 class QuizPlayTile extends StatefulWidget {
   final QuestionModel questionModel;
@@ -347,7 +241,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
               GestureDetector(
                 onTap: () {
                   if (!widget.questionModel.answered) {
-                    ///correct
+                   
                     if (widget.questionModel.option2 ==
                         widget.questionModel.correctOption) {
                       setState(() {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class OptionTile extends StatefulWidget {
   final String option, description, correctAnswer, optionSelected;
 
